@@ -13,14 +13,16 @@ module Vendor(
 
 reg [2:0] state = 3'b000;
 reg [1:0] cur_product;
-reg [10:0] money = 0;
+reg [8:0] money = 0;
 reg [2:0] next_state;
 
 always @(reset)begin
   state = 3'b000;
   next_state = 3'b000;
   LED = 0;
-  motor = 0;  
+  motor = 0;
+  money = 0;
+  cur_product = 0;  
 end
 
 always @(next_state) begin
@@ -89,6 +91,7 @@ always @(posedge drop_product) begin
         next_state <= 3'b000;
         motor = 0;
         LED = 0;
+        cur_product = 0; 
     end
 end
 endmodule
