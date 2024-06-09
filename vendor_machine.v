@@ -1,3 +1,4 @@
+
 module Vendor(
     input [1:0] product,
     input [1:0] coin,
@@ -11,33 +12,40 @@ module Vendor(
 );
 
 reg [2:0] state = 3'b000;
-reg [2:0] cur_product;
+reg [1:0] cur_product;
 reg [10:0] money = 0;
-reg next_state;
+reg [2:0] next_state;
 
 always @(reset)begin
   state = 3'b000;
-  next_state = 3'b000;  
+  next_state = 3'b000;
+  LED = 0;
+  motor = 0;  
 end
 
-always @(posedge clk) begin
+always @(next_state) begin
   state = next_state;
 end
 
-always @(posedge clk or product) begin
+always @(product) begin
     if (state == 3'b000) begin
         cur_product <= product;
         next_state <= 3'b001;
-        LED = 0;
-        motor = 0;
+        LED <= 1;
+        motor <= 0;
     end
 end
-
-always @(posedge clk or drop_coin or finish_coin) begin
+always @(posedge finish_coin) begin
     if (state == 3'b001) begin
         if (finish_coin == 1) begin
-            next_state = 3'b010;
+            next_state <= 3'b010;
+            LED = 2;
+            motor = 0;
         end
+    end
+end
+always @(posedge drop_coin) begin
+    if (state == 3'b001) begin
         if (drop_coin == 1) begin
             if (coin == 0) begin
                 money = money + 10;
@@ -54,29 +62,33 @@ always @(posedge clk or drop_coin or finish_coin) begin
     end
 end
 
-always @(posedge clk or state) begin
+always @(state) begin
     if (state == 3'b010) begin
-        if ((cur_product == 0 && money > 20) || (cur_product == 1 && money > 50) || (cur_product == 2 && money > 100) || (cur_product == 3 && money > 150)) begin
-            next_state = 3'b011;
+        if ((cur_product == 0 && money >= 10) || (cur_product == 1 && money >= 50) || (cur_product == 2 && money >= 100) || (cur_product == 3 && money >= 150)) begin
+            if(cur_product==0) money = money - 10;
+            else if(cur_product==1) money = money-50;
+            else if(cur_product==2) money = money-100;
+            else if(cur_product==3) money = money-150;
+        
+            next_state <= 3'b011;
             motor = 1;
-            LED = 2;
+            LED = 3;
+            
         end else begin
             next_state = 3'b100;
         end
     end else if (state == 3'b100) begin
-        # 100;
-        LED = 3;
-        next_state = 3'b000;
+        LED = 1;
+        next_state <= 3'b001;
+        # 10;
     end
 end
 
-always @(posedge clk or drop_product) begin
+always @(posedge drop_product) begin
     if (state == 3'b011) begin
-        if (drop_product == 1) begin
-            next_state = 3'b000;
-            motor = 0;
-            LED = 0;
-        end
+        next_state <= 3'b000;
+        motor = 0;
+        LED = 0;
     end
 end
 endmodule
