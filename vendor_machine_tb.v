@@ -74,6 +74,10 @@ module tb_Vendor;
         finish_coin = 1;
         #10;
         finish_coin = 0;
+        #10;
+        finish_coin = 1;
+        #10;
+        finish_coin = 0;
 
         coin = 2'b10;
         drop_coin = 1;
@@ -139,7 +143,7 @@ module tb_Vendor;
         drop_product = 0;
 
     end
-    // Monitor outputs
+
     wire [2:0] LED_out;
     wire motor_out;
 

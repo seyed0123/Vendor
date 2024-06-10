@@ -1,9 +1,8 @@
-
 module Vendor(
     input [1:0] product,
     input [1:0] coin,
     input drop_coin,
-    input reg finish_coin,
+    input reg check,
     input reg drop_product,
     input clk,
     input reset,
@@ -25,7 +24,7 @@ always @(reset)begin
   cur_product = 0;  
 end
 
-always @(next_state) begin
+always @(posedge clk or next_state) begin
   state = next_state;
 end
 
@@ -37,13 +36,15 @@ always @(product) begin
         motor <= 0;
     end
 end
-always @(posedge finish_coin) begin
+always @(posedge check) begin
     if (state == 3'b001) begin
-        if (finish_coin == 1) begin
-            next_state <= 3'b010;
-            LED = 2;
-            motor = 0;
-        end
+        next_state = 3'b010;
+        LED = 2;
+        motor = 0;
+    end else if (state == 3'b100) begin
+        LED = 1;
+        motor = 0;
+        next_state = 3'b001;
     end
 end
 always @(posedge drop_coin) begin
@@ -77,12 +78,10 @@ always @(state) begin
             LED = 3;
             
         end else begin
+            LED = 4;
+            motor = 0;
             next_state = 3'b100;
         end
-    end else if (state == 3'b100) begin
-        LED = 1;
-        next_state <= 3'b001;
-        # 10;
     end
 end
 
