@@ -1,9 +1,16 @@
 # Vendor machine
+![img](shot/img.jpg)
+this project is a vending machine and the final project of logic circuit.
 
 ## state diagram
 ![diagram](shot\diagram.png)
 at first machine resets and starts at  `choose product` state.
-when the product signal is changed, it goes to  `insert coin` stateand when the `drop_coin` signal is changed from 0 to 1, the machine sees the inserted coin and adds the amount of the coin to the user's money. When the `check` signal changes from 0 to 1 then the goes to the `evaluation` state and compares the user money and product price. if the money of the user is greater than the price of the product it subtracts the price from the money of the user so the user can use the money that remains in the next purchase, and the machine goes to  `deliver` state and otherwise goes to  `error` state after seeing the posedge check goes to  `insert coin` state and wait for the user to insert more coin to machine. in `deliver` state  it turns the motor on until the `drop_product` signal changes from 1 to 0, and then turns the motor off and goes to  `choose product` state and ready for another operation.
+
+when the product signal is changed, it goes to  `insert coin` stateand when the `drop_coin` signal is changed from 0 to 1, the machine sees the inserted coin and adds the amount of the coin to the user's money. 
+
+When the `check` signal changes from 0 to 1 then the goes to the `evaluation` state and compares the user money and product price. if the money of the user is greater than the price of the product it subtracts the price from the money of the user so the user can use the money that remains in the next purchase, and the machine goes to  `deliver` state and otherwise goes to `error` state after seeing the posedge `check` goes to  `insert coin` state and wait for the user to insert more coin to machine. 
+
+in `deliver` state  it turns the motor on until the `drop_product` signal changes from 1 to 0, and then turns the motor off and goes to  `choose product` state and ready for another operation.
 
 ## output table and transition table
 | current state  | state code | LED | motor | next state             |
@@ -97,7 +104,7 @@ end
 when `product` signal changes it runs this always, if the machine is in the `choose product` state machine changes `cur_product` and `next_state` so the machine goes to the `insert coin` state and is ready for inserting coins and LED = 1.
 
 ## Test:
-some tests were done on the code you can see all of them in [test bench](vendor_machine_tb.v), I explain 4 of them here, the rest of the tests are like these ones just the inputs vary in them.
+some tests were done on the code you can see all of them in [test bench](src/vendor_machine_tb.v), I explain 4 of them here, the rest of the tests are like these ones just the inputs vary in them.
 ### test 1:
 ![test 1 image](shot/test1.png)
 at first the machine resets. LED = 000
