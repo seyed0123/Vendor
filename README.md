@@ -3,7 +3,7 @@
 this project is a vending machine and the final project of logic circuit.
 
 ## state diagram
-![diagram](shot\diagram.png)
+![[diagram](shot\state_diagram.png)](https://github.com/seyed0123/Vendor/blob/main/shot/state_diagram.png)
 at first machine resets and starts at  `choose product` state.
 
 when the product signal is changed, it goes to  `insert coin` stateand when the `drop_coin` signal is changed from 0 to 1, the machine sees the inserted coin and adds the amount of the coin to the user's money. 
