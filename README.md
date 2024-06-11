@@ -1,5 +1,5 @@
 # Vendor machine
-![img](shot/img.jpg)
+![img](shot/vendor.png)
 this project is a vending machine and the final project of logic circuit.
 
 ## state diagram
