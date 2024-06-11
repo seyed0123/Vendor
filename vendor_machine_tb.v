@@ -95,9 +95,9 @@ module tb_Vendor;
         #10 reset = 0;
         #50;
 // test 3:
-        product = 2'b00; // Switching to a valid product immediately
+        product = 2'b01; 
         #10;
-        coin = 2'b01; // Providing coins for the new product
+        coin = 2'b01; 
         drop_coin = 1;
         #10;
         drop_coin = 0;
@@ -105,7 +105,7 @@ module tb_Vendor;
         finish_coin = 1;
         #10;
         finish_coin = 0;
-        coin = 2'b11; // Providing coins for the new product
+        coin = 2'b10; 
         drop_coin = 1;
         #10;
         drop_coin = 0;
@@ -122,10 +122,12 @@ module tb_Vendor;
         reset = 1;
         #10 reset = 0;
         #50;
+
 // test 4:
-        product = 2'b01; // Product 1
+        product = 2'b10; 
         #10;
-        coin = 2'b00; // Only 10 cents provided
+        product = 2'b00;
+        coin = 2'b10; 
         drop_coin = 1;
         #10;
         drop_coin = 0;
@@ -142,6 +144,247 @@ module tb_Vendor;
         #10;
         drop_product = 0;
 
+        reset = 1;
+        #50;reset = 0;
+// test 5: product 2 and error case
+        product = 3'b10;
+        #10
+
+        coin = 2'b10;
+        drop_coin = 1;
+        #10;
+        drop_coin = 0;
+
+        finish_coin = 1;
+        #10;
+        finish_coin = 0;
+        #10;
+        finish_coin = 1;
+        #10;
+        finish_coin = 0;
+
+        coin = 2'b10;
+        drop_coin = 1;
+        #10;
+
+        finish_coin = 1;
+        #10;
+
+        drop_product = 1;  
+        #10;
+        drop_product = 0;
+    
+    
+        reset = 1;
+        #10 reset = 0;
+        #50;
+
+// test 6: buy product 11 with 15 coin 00
+        product = 2'b11; 
+        #10;
+        coin = 2'b00; 
+        drop_coin = 1;
+        #10;
+        drop_coin = 0;
+        #5;
+
+        drop_coin = 1;
+        #10
+        drop_coin = 0;
+        #5;
+
+        drop_coin = 1;
+        #10
+        drop_coin = 0;
+        #5;
+
+        drop_coin = 1;
+        #10
+        drop_coin = 0;
+        #5;
+
+        drop_coin = 1;
+        #10
+        drop_coin = 0;
+        #5;
+
+        drop_coin = 1;
+        #10
+        drop_coin = 0;        
+
+        #5;
+
+        drop_coin = 1;
+        #10
+        drop_coin = 0;
+        #5;
+
+        drop_coin = 1;
+        #10
+        drop_coin = 0;
+        #5;
+
+        drop_coin = 1;
+        #10
+        drop_coin = 0;
+        #5;
+
+        drop_coin = 1;
+        #10
+        drop_coin = 0;
+        #5;
+
+        drop_coin = 1;
+        #10
+        drop_coin = 0;
+        #5;
+
+        drop_coin = 1;
+        #10
+        drop_coin = 0;
+        #5;
+
+        drop_coin = 1;
+        #10
+        drop_coin = 0;
+        #5;
+
+        drop_coin = 1;
+        #10
+        drop_coin = 0;
+        #5;
+
+        drop_coin = 1;
+        #10
+        drop_coin = 0;
+        #5;
+
+        drop_coin = 1;
+        #10
+        drop_coin = 0;
+        
+        finish_coin = 1;
+        #10;
+        finish_coin = 0;
+
+        drop_product = 1;
+        #10;
+        drop_product = 0;
+
+        reset = 1;
+        #50;reset = 0;
+
+// test 7:
+        product = 2'b00; 
+        #10;
+        coin = 2'b10; 
+        drop_coin = 1;
+        #10;
+        drop_coin = 0;
+
+        finish_coin = 1;
+        #10;
+        finish_coin = 0;
+
+        drop_product = 1;
+        #10;
+        drop_product = 0;
+
+        reset = 1;
+        #50;reset = 0;
+
+// test 8:
+        product = 2'b10; 
+        #10;
+        product = 2'b00;
+        coin = 2'b10;
+        drop_coin = 1;
+        #10;
+        drop_coin = 0;
+        #5;
+
+        drop_coin = 1;
+        #10;
+        drop_coin = 0;
+
+        finish_coin = 1;
+        #10;
+        finish_coin = 0;
+
+        drop_product = 1;
+        #10;
+        drop_product = 0;
+
+        reset = 1;
+        #50;reset = 0;
+
+// test 9:
+        product = 2'b10; 
+        #10;
+        coin = 2'b01;
+        drop_coin = 1;
+        #10;
+        drop_coin = 0;
+        #5;
+
+        drop_coin = 1;
+        #10;
+        drop_coin = 0;
+        #5;
+
+        drop_coin = 1;
+        #10;
+        drop_coin = 0;
+        #5;
+
+        drop_coin = 1;
+        #10;
+        drop_coin = 0;
+        #5;
+
+        drop_coin = 1;
+        #10;
+        drop_coin = 0;
+
+        finish_coin = 1;
+        #10;
+        finish_coin = 0;
+
+        drop_product = 1;
+        #10;
+        drop_product = 0;
+
+        reset = 1;
+        #50;reset = 0;
+
+// test 10:
+        product = 2'b11; 
+        #10;
+        coin = 2'b10;
+        drop_coin = 1;
+        #10;
+        drop_coin = 0;
+        #5;
+
+        drop_coin = 1;
+        #10;
+        drop_coin = 0;
+        #5;
+
+        drop_coin = 1;
+        #10;
+        drop_coin = 0;
+
+        finish_coin = 1;
+        #10;
+        finish_coin = 0;
+
+        drop_product = 1;
+        #10;
+        drop_product = 0;
+
+        reset = 1;
+        #50;reset = 0;    
     end
 
     wire [2:0] LED_out;

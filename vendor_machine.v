@@ -36,6 +36,7 @@ always @(product) begin
         motor <= 0;
     end
 end
+
 always @(posedge check) begin
     if (state == 3'b001) begin
         next_state = 3'b010;
@@ -54,7 +55,7 @@ always @(posedge drop_coin) begin
                 money = money + 10;
             end else if (coin == 1) begin
                 money = money + 20;
-            end else if (coin == 3) begin
+            end else if (coin == 2) begin
                 money = money + 50;
             end else begin
                 money = money + 100;
