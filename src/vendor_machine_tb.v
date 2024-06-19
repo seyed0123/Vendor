@@ -20,6 +20,7 @@ module tb_Vendor;
 
     wire motor;
     wire [2:0] LED;
+    wire [8:0] money;
 
 
     reg reset;
@@ -390,7 +391,7 @@ module tb_Vendor;
     wire [2:0] LED_out;
     wire motor_out;
 
-    always #5 clk = ~clk;
+    always #1 clk = ~clk;
  
     //  initial begin
     //     $monitor("At time %t, product=%b, coin=%b, drop_coin=%b, finish_coin=%b, drop_product=%b, LED=%b, motor=%b", 

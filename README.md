@@ -32,13 +32,18 @@ module Vendor(
     input clk,
     input reset,
     output reg motor,
-    output reg [2:0] LED
+    output reg [2:0] LED,
+    output reg [8:0] money
 );
 
 reg [2:0] state = 3'b000;
 reg [1:0] cur_product;
-reg [8:0] money = 0;
 reg [2:0] next_state;
+reg [3:0] product_1_num = 7;
+reg [3:0] product_2_num = 7;
+reg [3:0] product_3_num = 7;
+reg [3:0] product_0_num = 7;
+
 ```
 
 ### inputs:
@@ -53,12 +58,17 @@ reg [2:0] next_state;
 ### outputs:
 1. LED: shows the monitor situation
 2. motor: shows the motor situation
+3. money: shows the money situation
 
 ### registers:
 1. three bit state: shows the current state of the machine
 2. two bit current product: shows the current product that the user selected.
 3. eigth bit money: shows the amount of coin that the user inserted to the machine
 4. three bit next state: shows the next state of the machine should goes to it.
+5. four bit product_0_num: shows the number of product zero in the machine.
+6. four bit product_1_num: shows the number of product one in the machine.
+7. four bit product_2_num: shows the number of product two in the machine.
+8. four bit product_3_num: shows the number of product three in the machine.
 
 ## price of product and coins
 | product 	| price 	|
@@ -85,15 +95,22 @@ always @(posedge drop_product) begin
         next_state <= 3'b000;
         motor = 0;
         LED = 0;
+        case (cur_product)
+            0:product_0_num = product_0_num - 1;
+            1:product_1_num = product_1_num - 1;
+            2:product_2_num = product_2_num - 1;
+            3:product_3_num = product_3_num - 1;
+        endcase
         cur_product = 0; 
     end
+end
 ```
-in this always block in ts checks if the machine is in the state `deliver` and `drop_product` signal changes from 0 to 1 it turns the motor off and the LED to 0 and resets the `cur_product` and puts `next_state` to 0.
+in this always block in ts checks if the machine is in the state `deliver` and `drop_product` signal changes from 0 to 1 it turns the motor off and the LED to 0 and resets the `cur_product` and puts `next_state` to 0 and redused the number of the product that delivered.
 
 or in this part
 ```verilog
 always @(product) begin
-    if (state == 3'b000) begin
+    if (state == 3'b000 &&(((product==0)&&(product_0_num>0))||((product==1)&&(product_1_num>0))||((product==2)&&(product_2_num>0))||((product==3)&&(product_3_num>0)))) begin
         cur_product <= product;
         next_state <= 3'b001;
         LED <= 1;
@@ -101,10 +118,12 @@ always @(product) begin
     end
 end
 ```
-when `product` signal changes it runs this always, if the machine is in the `choose product` state machine changes `cur_product` and `next_state` so the machine goes to the `insert coin` state and is ready for inserting coins and LED = 1.
+when `product` signal changes it runs this always, if the machine is in the `choose product` state machine and machine has enough of this product ,it changes `cur_product` and `next_state` so the machine goes to the `insert coin` state and is ready for inserting coins and LED = 1.
 
 ## Test:
 some tests were done on the code you can see all of them in [test bench](src/vendor_machine_tb.v), I explain 4 of them here, the rest of the tests are like these ones just the inputs vary in them.
+I add some features to the machine and make a new test `test 5` to show it.
+
 ### test 1:
 ![test 1 image](shot/test1.png)
 at first the machine resets. LED = 000
@@ -160,3 +179,20 @@ at time t=400 `drop_coin` again changes to 1 so the money increases to 100.
 at time t=410 `check` signal changes to 1 so the machine goes to the `evaulate` state. Because the money is greater than the product price, the money decreases to 0 and the machine goes to the `deliver` state, and the motor turns on. LED = 011
 
 at time t=420 `drop_product` signal changes to 1 so the motors turns off and the machine goes to the `choose products` state. LED =000.
+
+### test 5:
+![test 5 image](shot/test5.png)
+
+at time t=480 `product` signal changes to 10 to the machine goes to the `insert coin` state.
+
+at time t = 490 the `drop_cion` signal changes to 1 so the machine reads the `coin` signal and increases the money to 50.
+
+at time t=500 the `check` signal changes to 1 machine goes to the `evaluate` state but the user money is less than the price of the product so the machine goes to the `error` state and LED = 100.
+
+at time t = 520 the `check` signal changes to 1 machine goes to the `insert coin` state again and the machine waits for the user to input more coins.
+
+at time t=530 the `drop_coin` signal changes to 1 the machine reads the `coin` signal and the money increases to 100.
+
+at time t=540 the `check` changes to 1 but this time user has enough money so the machine goes to the `deliver` state and the motor turns on.
+
+at time t= 550 the `drop_product` signal changes to 1 so the machine goes to the `choose product` state and turns the motor off.

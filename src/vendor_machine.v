@@ -7,13 +7,17 @@ module Vendor(
     input clk,
     input reset,
     output reg motor,
-    output reg [2:0] LED
+    output reg [2:0] LED,
+    output reg [8:0] money
 );
 
 reg [2:0] state = 3'b000;
 reg [1:0] cur_product;
-reg [8:0] money = 0;
 reg [2:0] next_state;
+reg [3:0] product_1_num = 7;
+reg [3:0] product_2_num = 7;
+reg [3:0] product_3_num = 7;
+reg [3:0] product_0_num = 7;
 
 always @(reset)begin
   state = 3'b000;
@@ -24,12 +28,12 @@ always @(reset)begin
   cur_product = 0;  
 end
 
-always @(posedge clk or next_state) begin
+always @(posedge clk) begin
   state = next_state;
 end
 
 always @(product) begin
-    if (state == 3'b000) begin
+    if (state == 3'b000 &&(((product==0)&&(product_0_num>0))||((product==1)&&(product_1_num>0))||((product==2)&&(product_2_num>0))||((product==3)&&(product_3_num>0)))) begin
         cur_product <= product;
         next_state <= 3'b001;
         LED <= 1;
@@ -91,6 +95,12 @@ always @(posedge drop_product) begin
         next_state <= 3'b000;
         motor = 0;
         LED = 0;
+        case (cur_product)
+            0:product_0_num = product_0_num - 1;
+            1:product_1_num = product_1_num - 1;
+            2:product_2_num = product_2_num - 1;
+            3:product_3_num = product_3_num - 1;
+        endcase
         cur_product = 0; 
     end
 end
